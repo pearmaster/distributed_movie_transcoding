@@ -1,0 +1,71 @@
+services:
+  coordinator:
+    build:
+      context: ./coordinator
+      dockerfile: Dockerfile
+    container_name: transcode-coordinator
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./input:/input
+      - ./output:/output
+      - ./data:/data
+    environment:
+      - INPUT_DIR=/input
+      - OUTPUT_DIR=/output
+      - DATA_DIR=/data
+      - SEGMENT_DURATION_SECONDS=${SEGMENT_DURATION_SECONDS:-300}
+      - WATCHER_POLL_INTERVAL=2.0
+      - TASK_TIMEOUT_SECONDS=900
+    restart: unless-stopped
+    networks:
+      - transcode-net
+
+  worker-fast:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: transcode-worker-fast
+    depends_on:
+      - coordinator
+    environment:
+      - COORDINATOR_URL=http://coordinator:8000
+      - WORKER_ID=worker-fast
+      - HANDBRAKE_QUALITY=24
+    restart: unless-stopped
+    networks:
+      - transcode-net
+
+  worker-slow:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: transcode-worker-slow
+    depends_on:
+      - coordinator
+    environment:
+      - COORDINATOR_URL=http://coordinator:8000
+      - WORKER_ID=worker-slow
+      - HANDBRAKE_QUALITY=22
+    restart: unless-stopped
+    networks:
+      - transcode-net
+
+  worker-standard:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: transcode-worker-standard
+    depends_on:
+      - coordinator
+    environment:
+      - COORDINATOR_URL=http://coordinator:8000
+      - WORKER_ID=worker-standard
+      - HANDBRAKE_QUALITY=22
+    restart: unless-stopped
+    networks:
+      - transcode-net
+
+networks:
+  transcode-net:
+    driver: bridge

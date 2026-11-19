@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary and runtime data
+data/*
+!data/.gitkeep
+
+# Input video files
+input/*
+!input/.gitkeep
+
+# Output video files
+output/*
+!output/.gitkeep
+
+# Environment variables & local secrets
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*~
