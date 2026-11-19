@@ -79,6 +79,9 @@ A scalable, distributed video transcoding system designed to process MPEG-2 Tran
 6. **Automatic Lossless Joining**:
    - Once all segments for a file are reported complete, the coordinator concatenates all `.mkv` segments into `/output/<original_basename>.mkv` and updates the file status to `completed`.
 
+7. **Multi-Architecture Support (x86_64 & aarch64)**:
+   - Automated GitHub Actions workflow builds multi-platform Docker container images for both `linux/amd64` and `linux/arm64` (Apple Silicon / Raspberry Pi / AWS Graviton / Ampere).
+
 ---
 
 ## Directory Structure
